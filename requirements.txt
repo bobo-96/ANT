@@ -12,7 +12,7 @@ django-filter==2.4.0
 django-rest-auth==0.9.5
 djangorestframework==3.12.4
 djangorestframework-jwt==1.11.0
-djangorestframework-simplejwt==4.7.1
+djangorestframework-simplejwt==4.4.0
 idna==2.10
 Markdown==3.3.4
 oauthlib==3.1.1
