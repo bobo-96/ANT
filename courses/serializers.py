@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from courses.models import Category, Chapter, Course, Subcategory, Comments
+from courses.models import Category, Chapter, Course, Subcategory, Comments, Lesson
 from user.models import User
 
 
@@ -69,12 +69,28 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ('name', 'lessons_count', 'owner', 'description', 'post_comments')
+        fields = (
+            'name', 'lessons_count', 'owner', 'description',
+            'post_comments', 'date', 'price', 'course_preview_image',
+            'course_preview_video', 'category', 'id',
+        )
 
+    def create(self, validated_data):
+        user = self.context.get('request').user
+        course = Course.objects.create(owner=user, **validated_data)
+        return course
 
+class LessonSerializer(serializers.ModelSerializer):
+    owner = UserSerializer(read_only=True, many=False)
 
+    class Meta:
+        model = Lesson
+        fields = ('owner', 'name', 'lesson_video_material', 'description', 'lesson_materials')
 
-
+    def create(self, validated_data):
+        user = self.context.get('request').user
+        lesson = Lesson.objects.create(owner=user, **validated_data)
+        return lesson
 
 
 

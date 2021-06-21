@@ -57,3 +57,20 @@ class Chapter(models.Model):
     def __str__(self):
         return f'{self.name}'
 
+
+class Lesson(models.Model):
+    owner = models.ForeignKey('user.User', models.CASCADE, 'lesson_owner')
+    course = course = models.ForeignKey('courses.Course', models.CASCADE, 'course_lesson')
+    name = models.CharField('Название урока', max_length=255)
+    lesson_video_material = models.FileField('Видео материалы', upload_to='lesson_video_material')
+    description = models.TextField('Описание урока')
+    lesson_materials = models.FileField('Материалы по уроку', upload_to='lesson_materials')
+
+    def __str__(self):
+        return f'{self.name} {self.description}'
+
+# class Homework(models.Model):
+#     owner = models.ForeignKey('user.User', models.CASCADE, 'homework_owner')
+#     lesson = models.ForeignKey('courses.Lesson', models.CASCADE, 'lesson_homework')
+#     name = models.CharField('Название домашнего задания', max_length=255)
+#     description = models.TextField('Описание домашнего задания')
