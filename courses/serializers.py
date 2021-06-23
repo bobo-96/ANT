@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'avatar',)
+        fields = ('username', 'avatar', 'id')
 
 
 class CourseForCategories(serializers.ModelSerializer):
@@ -30,7 +30,7 @@ class SubCategoryWithCoursesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subcategory
-        fields = ('name', 'course_subcategory')
+        fields = ('id', 'name', 'course_subcategory')
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
@@ -38,6 +38,15 @@ class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Subcategory
         fields = ('name',)
+
+
+class CategoryWithSubcategory(serializers.ModelSerializer):
+    category_subcategory = SubCategorySerializer(read_only=True)
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name', 'category_subcategory')
+
 
 
 class CommentSerializer(serializers.ModelSerializer):

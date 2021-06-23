@@ -8,12 +8,19 @@ from rest_framework import filters, status
 from courses.models import Course, Category, Subcategory, Comments, CourseAccess
 from courses.permissions import IsCourseOwnerOrReadOnly
 from courses.serializers import CategorySerializer, SubCategorySerializer, SubCategoryWithCoursesSerializer, \
-    CourseSerializer, CommentSerializer
+    CourseSerializer, CommentSerializer, CategoryWithSubcategory
 
 
 class CategoryView(ModelViewSet):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
+    lookup_field = 'pk'
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
+
+class CategoryWithSubcategoryView(ModelViewSet):
+    serializer_class = CategoryWithSubcategory
+    queryset = Category.objects.prefetch_related('category_subcategory').all()
     lookup_field = 'pk'
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
