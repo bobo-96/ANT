@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from courses.models import Category, Chapter, Course, Subcategory, Comments, Lesson
+from courses.models import Category, Chapter, Course, Subcategory, Comments, Lesson, Homework, StudentsHomeworks
 from user.models import User
 
 
@@ -41,12 +41,11 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
 
 class CategoryWithSubcategory(serializers.ModelSerializer):
-    category_subcategory = SubCategorySerializer(read_only=True)
+    category_subcategory = SubCategorySerializer(read_only=True, many=True)
 
     class Meta:
         model = Category
         fields = ('id', 'name', 'category_subcategory')
-
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -56,12 +55,10 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comments
         fields = '__all__'
 
-
     def create(self, validated_data):
         user = self.context.get('request').user
         comment = Comments.objects.create(owner=user, **validated_data)
         return comment
-
 
     def update(self, instance, validated_data):
         data = validated_data.copy()
@@ -89,16 +86,40 @@ class CourseSerializer(serializers.ModelSerializer):
         course = Course.objects.create(owner=user, **validated_data)
         return course
 
+
 class LessonSerializer(serializers.ModelSerializer):
-    owner = UserSerializer(read_only=True, many=False)
 
     class Meta:
         model = Lesson
-        fields = ('owner', 'name', 'lesson_video_material', 'description', 'lesson_materials')
+        fields = ('id', 'name', 'lesson_video_material', 'description', 'lesson_materials', 'course')
 
     def create(self, validated_data):
         user = self.context.get('request').user
         lesson = Lesson.objects.create(owner=user, **validated_data)
+        return lesson
+
+
+class HomeworkSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Homework
+        fields = ('id', 'name', 'description', 'homework_materials', 'lesson')
+
+    def create(self, validated_data):
+        user = self.context.get('request').user
+        lesson = Homework.objects.create(owner=user, **validated_data)
+        return lesson
+
+
+class StudentsHomeworksSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentsHomeworks
+        fields = ('id', 'url')
+
+    def create(self, validated_data):
+        user = self.context.get('request').user
+        lesson = StudentsHomeworks.objects.create(owner=user, **validated_data)
         return lesson
 
 
@@ -110,37 +131,6 @@ class LessonSerializer(serializers.ModelSerializer):
 
 
 
-
-
-
-# class CourseSerializer(serializers.ModelSerializer):
-#
-#     owner = UserSerializer(read_only=True, many=False)
-#     category = CategorySerializer(read_only=True, many=False)
-#     # chapter = ChapterSerializer(many=True)
-#
-#     class Meta:
-#         model = Course
-#         fields = ('category', 'owner', 'name', 'description', 'course_preview_image', 'course_preview_video', 'date')
-
-    # def create(self, validated_data):
-    #     user = self.context.get('request').user
-    #     course = Course.objects.create(owner=user, **validated_data)
-    #     chapters = self.context.get('request').data.getlist('Chapter.name')
-    #     chapter_list = [Chapter(name=item, course=course) for item in chapters]
-    #     Chapter.objects.bulk_create(chapter_list)
-    #     return course
-    #
-    # def update(self, instance, validated_data):
-    #     for attr, value, in validated_data.items():
-    #         setattr(instance, attr, value)
-    #     instance.save()
-    #     chapters = self.context.get('request').data.getlist('Chapter.name')
-    #     if chapters:
-    #         Chapter.objects.filter(course=instance).delete()
-    #         chapter_list = [Chapter(name=item, course=instance) for item in chapters]
-    #         Chapter.objects.bulk_create(chapter_list)
-    #     return instance
 
 
 

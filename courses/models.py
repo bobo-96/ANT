@@ -62,15 +62,23 @@ class Lesson(models.Model):
     owner = models.ForeignKey('user.User', models.CASCADE, 'lesson_owner')
     course = course = models.ForeignKey('courses.Course', models.CASCADE, 'course_lesson')
     name = models.CharField('Название урока', max_length=255)
-    lesson_video_material = models.FileField('Видео материалы', upload_to='lesson_video_material')
-    description = models.TextField('Описание урока')
-    lesson_materials = models.FileField('Материалы по уроку', upload_to='lesson_materials')
+    lesson_video_material = models.FileField('Видео материалы', upload_to='lesson_video_material', null=True)
+    description = models.TextField('Описание урока', null=True)
+    lesson_materials = models.FileField('Материалы по уроку', upload_to='lesson_materials', null=True)
 
     def __str__(self):
         return f'{self.name} {self.description}'
 
-# class Homework(models.Model):
-#     owner = models.ForeignKey('user.User', models.CASCADE, 'homework_owner')
-#     lesson = models.ForeignKey('courses.Lesson', models.CASCADE, 'lesson_homework')
-#     name = models.CharField('Название домашнего задания', max_length=255)
-#     description = models.TextField('Описание домашнего задания')
+
+class Homework(models.Model):
+    owner = models.ForeignKey('user.User', models.CASCADE, 'homework_owner')
+    lesson = models.ForeignKey('courses.Lesson', models.CASCADE, 'lesson_homework')
+    name = models.CharField('Название домашнего задания', max_length=255)
+    description = models.TextField('Описание домашнего задания')
+    homework_materials = models.FileField('Материалы по домашнему заданию', upload_to='homework_materials', null=True)
+
+
+class StudentsHomeworks(models.Model):
+    owner = models.ForeignKey('user.User', models.CASCADE, 'student_homework_owner')
+    homework = models.ForeignKey('courses.Homework', models.CASCADE, 'student_homework')
+    url = models.URLField(max_length=200)

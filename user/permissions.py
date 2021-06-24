@@ -8,3 +8,5 @@ class IsUserOwnerOrReadOnly(BasePermission):
         if request.method == 'GET':
             return True
         return obj == request.user
+
+

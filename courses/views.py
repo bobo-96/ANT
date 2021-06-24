@@ -5,10 +5,11 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import filters, status
 
-from courses.models import Course, Category, Subcategory, Comments, CourseAccess
-from courses.permissions import IsCourseOwnerOrReadOnly
+from courses.models import Course, Category, Subcategory, Comments, CourseAccess, Lesson, Homework, StudentsHomeworks
+from courses.permissions import IsCourseOwnerOrReadOnly, IsLessonOwnerOrReadOnly, IsHomeworOwnerOrReadOnly
 from courses.serializers import CategorySerializer, SubCategorySerializer, SubCategoryWithCoursesSerializer, \
-    CourseSerializer, CommentSerializer, CategoryWithSubcategory
+    CourseSerializer, CommentSerializer, CategoryWithSubcategory, LessonSerializer, HomeworkSerializer, \
+    StudentsHomeworksSerializer
 
 
 class CategoryView(ModelViewSet):
@@ -111,33 +112,87 @@ class CommentView(ModelViewSet):
         return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
 
 
-# class LessonView(ModelViewSet):
-#     serializer_class = CommentSerializer
-#     queryset = Lesson.objects.all()
-#     lookup_field = 'pk'
-#
-#     def create(self, request, *args, **kwargs):
-#         user = request.user
-#         course = request.data.get('course')
-#         if CourseAccess.objects.filter(owner=user, course_id=course):
-#             return super().create(request, *args, **kwargs)
-#         return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
-#
-#     def update(self, request, *args, **kwargs):
-#         user = request.user
-#         comment = self.get_object()
-#         if comment.owner == user:
-#             return super().update(request, *args, **kwargs)
-#         return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
-#
-#     def destroy(self, request, *args, **kwargs):
-#         user = request.user
-#         comment = self.get_object()
-#         if comment.owner == user:
-#             self.perform_destroy(comment)
-#             return Response(status=status.HTTP_204_NO_CONTENT)
-#         return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
+class LessonView(ModelViewSet):
+    serializer_class = LessonSerializer
+    queryset = Lesson.objects.all()
+    lookup_field = 'pk'
+    permission_classes = (IsLessonOwnerOrReadOnly,)
+
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        course = request.data.get('course')
+        if Course.objects.filter(owner=user, id=course):
+            return super().create(request, *args, **kwargs)
+        return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
+
+    def update(self, request, *args, **kwargs):
+        user = request.user
+        lesson = self.get_object()
+        if lesson.owner == user:
+            return super().update(request, *args, **kwargs)
+        return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
+
+    def destroy(self, request, *args, **kwargs):
+        user = request.user
+        lesson = self.get_object()
+        if lesson.owner == user:
+            self.perform_destroy(lesson)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
 
 
+class HomeworkView(ModelViewSet):
+    serializer_class = HomeworkSerializer
+    queryset = Homework.objects.all()
+    lookup_field = 'pk'
+    permission_classes = (IsHomeworOwnerOrReadOnly,)
+
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        lesson = request.data.get('lesson')
+        if Lesson.objects.filter(owner=user, id=lesson):
+            return super().create(request, *args, **kwargs)
+        return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
+
+    def update(self, request, *args, **kwargs):
+        user = request.user
+        homework = self.get_object()
+        if homework.owner == user:
+            return super().update(request, *args, **kwargs)
+        return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
+
+    def destroy(self, request, *args, **kwargs):
+        user = request.user
+        homework = self.get_object()
+        if homework.owner == user:
+            self.perform_destroy(homework)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
 
 
+class StudentsHomeworksView(ModelViewSet):
+    serializer_class = StudentsHomeworksSerializer
+    queryset = StudentsHomeworks.objects.all()
+    lookup_field = 'pk'
+
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        homework = request.data.get('homework')
+        if Homework.objects.filter(owner=user, id=homework):
+            return super().create(request, *args, **kwargs)
+        return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
+
+    def update(self, request, *args, **kwargs):
+        user = request.user
+        studentshomeworks = self.get_object()
+        if studentshomeworks.owner == user:
+            return super().update(request, *args, **kwargs)
+        return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
+
+    def destroy(self, request, *args, **kwargs):
+        user = request.user
+        studentshomeworks = self.get_object()
+        if studentshomeworks.owner == user:
+            self.perform_destroy(studentshomeworks)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
