@@ -1,4 +1,4 @@
-import self as self
+
 from allauth.account import app_settings as allauth_settings
 from allauth.utils import email_address_exists, get_username_max_length
 from allauth.account.adapter import get_adapter
@@ -6,7 +6,6 @@ from allauth.account.utils import setup_user_email
 from rest_framework import serializers
 from django.utils.translation import ugettext_lazy as _
 
-import user
 from user.models import User
 
 
@@ -52,9 +51,7 @@ class RegisterSerializer(serializers.Serializer):
             'last_name': self.validated_data.get('last_name', ''),
             'password1': self.validated_data.get('password1', ''),
             'email': self.validated_data.get('email', ''),
-
         }
-
 
     def save(self, request):
         adapter = get_adapter()
