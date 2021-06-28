@@ -30,9 +30,9 @@ class MyUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    phone = models.CharField(verbose_name='Номер телефона', max_length=255)
+    phone = models.CharField(verbose_name='Номер телефона', max_length=255, null=True)
     date = models.DateTimeField(verbose_name='Дата рождения', null=True)
-    avatar = models.FileField('Аватарка', upload_to='user_avatar/')
+    avatar = models.FileField('Аватарка', upload_to='user_avatar/', null=True)
 
     objects = MyUserManager()
 

@@ -9,7 +9,7 @@ from courses.models import Course, Category, Subcategory, Comments, CourseAccess
 from courses.permissions import IsCourseOwnerOrReadOnly, IsLessonOwnerOrReadOnly, IsHomeworOwnerOrReadOnly
 from courses.serializers import CategorySerializer, SubCategorySerializer, SubCategoryWithCoursesSerializer, \
     CourseSerializer, CommentSerializer, CategoryWithSubcategory, LessonSerializer, HomeworkSerializer, \
-    StudentsHomeworksSerializer
+    StudentsHomeworksSerializer, CourseAccessSerializer
 
 
 class CategoryView(ModelViewSet):
@@ -41,6 +41,15 @@ class SubCategoryView(ModelViewSet):
     lookup_field = 'pk'
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
+
+
+class CourseAccessView(ModelViewSet):
+    serializer_class = CourseAccessSerializer
+    queryset = CourseAccess.objects.all()
+    lookup_field = 'pk'
+
+
+
 
 
 class CourseView(ModelViewSet):
@@ -118,6 +127,21 @@ class LessonView(ModelViewSet):
     lookup_field = 'pk'
     permission_classes = (IsLessonOwnerOrReadOnly,)
 
+    def retrieve(self, request, *args, **kwargs):
+        user = request.user
+        lesson = self.get_object()
+        if CourseAccess.objects.filter(owner=user, course_id=lesson.id):
+            return super().retrieve(request, *args, **kwargs)
+        return Response('нет доступа',status=status.HTTP_403_FORBIDDEN)
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        lesson = self.get_object()
+        if CourseAccess.objects.filter(owner=user, course_id=lesson.id):
+            return super().retrieve(request, *args, **kwargs)
+        return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
+
+
     def create(self, request, *args, **kwargs):
         user = request.user
         course = request.data.get('course')
@@ -146,6 +170,20 @@ class HomeworkView(ModelViewSet):
     queryset = Homework.objects.all()
     lookup_field = 'pk'
     permission_classes = (IsHomeworOwnerOrReadOnly,)
+
+    def retrieve(self, request, *args, **kwargs):
+        user = request.user
+        homework = self.get_object()
+        if CourseAccess.objects.filter(owner=user, course_id=homework.id):
+            return super().retrieve(request, *args, **kwargs)
+        return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        homework = self.get_object()
+        if CourseAccess.objects.filter(owner=user, course_id=homework.id):
+            return super().retrieve(request, *args, **kwargs)
+        return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
 
     def create(self, request, *args, **kwargs):
         user = request.user
@@ -177,8 +215,8 @@ class StudentsHomeworksView(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         user = request.user
-        homework = request.data.get('homework')
-        if Homework.objects.filter(owner=user, id=homework):
+        course = request.data.get('course')
+        if CourseAccess.objects.filter(owner=user, course_id=course):
             return super().create(request, *args, **kwargs)
         return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
 

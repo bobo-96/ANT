@@ -1,5 +1,5 @@
 from django.contrib import admin
-from courses.models import Course, Category, Chapter, Subcategory
+from courses.models import Course, Category, Chapter, Subcategory, CourseAccess
 
 
 class CourseMediaInline(admin.TabularInline):
@@ -16,4 +16,5 @@ admin.site.register(Course, CourseAdmin)
 admin.site.register(Subcategory)
 admin.site.register(Category)
 admin.site.register(Chapter)
+admin.site.register(CourseAccess)
 

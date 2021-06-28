@@ -6,6 +6,7 @@ from allauth.account.utils import setup_user_email
 from rest_framework import serializers
 from django.utils.translation import ugettext_lazy as _
 
+from courses.models import Course
 from user.models import User
 
 
@@ -67,4 +68,10 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'phone', 'avatar', 'username', 'first_name', 'last_name', 'email')
+        fields = ('id', 'phone', 'avatar', 'first_name', 'last_name', 'email')
+
+class ShortCourseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Course
+        fields = ('id', 'name', 'course_preview_image')

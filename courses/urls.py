@@ -1,13 +1,15 @@
 from django.urls import path
 
 from courses.views import CategoryView, SubCategoryView, SubCategoryWithCoursesView, CourseView, CommentView, \
-    CategoryWithSubcategoryView, LessonView, HomeworkView, StudentsHomeworksView
+    CategoryWithSubcategoryView, LessonView, HomeworkView, StudentsHomeworksView, CourseAccessView
 
 urlpatterns = [
     # path('', CourseView.as_view({'get': 'list'})),
     path('course/create', CourseView.as_view({'post': 'create'})),
     path('course/<int:pk>', CourseView.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
     path('course/', CourseView.as_view({'get': 'list'})),
+    path('courseaccess/create', CourseAccessView.as_view({'post': 'create'})),
+    path('courseaccess/<int:pk>', CourseAccessView.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
     path('lesson/create', LessonView.as_view({'post': 'create'})),
     path('lessons/', LessonView.as_view({'get': 'list'})),
     path('lesson/<int:pk>', LessonView.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),

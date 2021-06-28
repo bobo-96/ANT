@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from courses.models import Category, Chapter, Course, Subcategory, Comments, Lesson, Homework, StudentsHomeworks
+from courses.models import Category, Chapter, Course, Subcategory, Comments, Lesson, Homework, StudentsHomeworks, \
+    CourseAccess
 from user.models import User
 
 
@@ -46,6 +47,13 @@ class CategoryWithSubcategory(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ('id', 'name', 'category_subcategory')
+
+
+class CourseAccessSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CourseAccess
+        fields = '__all__'
 
 
 class CommentSerializer(serializers.ModelSerializer):
