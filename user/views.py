@@ -42,7 +42,7 @@ class UserCourseView(ListAPIView):
          return Course.objects.filter(course_access__owner=self.request.user)
 
 
-class TeacherView(ModelViewSet):
+class UsersView(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'pk'
