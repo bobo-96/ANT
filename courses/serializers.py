@@ -9,14 +9,15 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'avatar', 'id')
+        fields = ('first_name', 'last_name', 'avatar', 'id')
 
 
 class CourseForCategories(serializers.ModelSerializer):
+    owner = UserSerializer(read_only=True)
 
     class Meta:
         model = Course
-        fields = ('name', 'owner', 'course_preview_image', 'lessons_count', 'price')
+        fields = ('id', 'name', 'owner', 'course_preview_image', 'lessons_count', 'price')
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -86,7 +87,7 @@ class CourseSerializer(serializers.ModelSerializer):
         fields = (
             'name', 'lessons_count', 'owner', 'description',
             'post_comments', 'date', 'price', 'course_preview_image',
-            'course_preview_video', 'category', 'id',
+            'course_preview_video', 'category', 'id', 'subcategory',
         )
 
     def create(self, validated_data):

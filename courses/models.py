@@ -40,7 +40,7 @@ class Course(models.Model):
     course_preview_video = models.FileField('Вступительное видео курса', upload_to='course_preview_video', null=True)
 
     def __str__(self):
-        return f'{self.name} {self.description}'
+        return f'{self.name} {self.description} {self.category} {self.subcategory}'
 
 
 class CourseAccess(models.Model):
@@ -67,7 +67,7 @@ class Lesson(models.Model):
     lesson_materials = models.FileField('Материалы по уроку', upload_to='lesson_materials', null=True)
 
     def __str__(self):
-        return f'{self.name} {self.description}'
+        return f'{self.name} {self.description} {self.course}'
 
 
 class Homework(models.Model):
@@ -77,8 +77,14 @@ class Homework(models.Model):
     description = models.TextField('Описание домашнего задания')
     homework_materials = models.FileField('Материалы по домашнему заданию', upload_to='homework_materials', null=True)
 
+    def __str__(self):
+        return f'{self.name} {self.description} {self.lesson}'
+
 
 class StudentsHomeworks(models.Model):
     owner = models.ForeignKey('user.User', models.CASCADE, 'student_homework_owner')
     homework = models.ForeignKey('courses.Homework', models.CASCADE, 'student_homework')
     url = models.URLField(max_length=200)
+
+    def __str__(self):
+        return f'{self.owner} {self.homework}'
