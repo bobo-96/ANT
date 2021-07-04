@@ -36,7 +36,7 @@ class Course(models.Model):
     lessons_count = models.IntegerField('Количество уроков', null=True)
     date = models.DateTimeField('Дата создания', auto_now_add=True)
     price = models.DecimalField('Цена', max_digits=6, decimal_places=2, null=True)
-    course_preview_image = models.ImageField('Изображение курса', upload_to='course_preview_image', null=True)
+    course_preview_image = models.FileField('Изображение курса', upload_to='course_preview_image', null=True)
     course_preview_video = models.FileField('Вступительное видео курса', upload_to='course_preview_video', null=True)
 
     def __str__(self):
