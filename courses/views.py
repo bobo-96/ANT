@@ -69,8 +69,6 @@ class CourseView(ModelViewSet):
         return Response('нет доступа', status=status.HTTP_403_FORBIDDEN)
 
 
-
-
     def get_object(self):
         obj = Course.objects.all().annotate(
             owner_nick_name=F('owner__username'),

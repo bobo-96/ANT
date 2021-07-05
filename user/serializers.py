@@ -74,8 +74,17 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'is_staff', 'phone', 'avatar', 'first_name', 'last_name', 'email')
 
+
+class UserSerializerForCourses(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name')
+
+
 class ShortCourseSerializer(serializers.ModelSerializer):
+    owner = UserSerializerForCourses(read_only=True)
 
     class Meta:
         model = Course
-        fields = ('id', 'name', 'course_preview_image')
+        fields = ('id', 'name', 'course_preview_image', 'lessons_count', 'owner')
