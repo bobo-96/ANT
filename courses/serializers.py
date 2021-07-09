@@ -130,19 +130,3 @@ class StudentsHomeworksSerializer(serializers.ModelSerializer):
         user = self.context.get('request').user
         lesson = StudentsHomeworks.objects.create(owner=user, **validated_data)
         return lesson
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

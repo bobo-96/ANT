@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
@@ -36,10 +35,10 @@ class UserView(GenericViewSet):
 
 
 class UserCourseView(ListAPIView):
-     serializer_class = ShortCourseSerializer
+    serializer_class = ShortCourseSerializer
 
-     def get_queryset(self):
-         return Course.objects.filter(course_access__owner=self.request.user)
+    def get_queryset(self):
+        return Course.objects.filter(course_access__owner=self.request.user)
 
 
 class UsersView(ModelViewSet):

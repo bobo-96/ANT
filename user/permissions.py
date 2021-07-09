@@ -1,5 +1,4 @@
-from django.contrib.auth.models import AnonymousUser
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.permissions import BasePermission
 
 
 class IsUserOwnerOrReadOnly(BasePermission):
@@ -8,5 +7,3 @@ class IsUserOwnerOrReadOnly(BasePermission):
         if request.method == 'GET':
             return True
         return obj == request.user
-
-

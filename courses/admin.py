@@ -3,7 +3,7 @@ from courses.models import Course, Category, Chapter, Subcategory, CourseAccess,
 
 
 class CourseMediaInline(admin.TabularInline):
-    model = Chapter
+    model = Lesson
     extra = 3
 
 
@@ -20,4 +20,3 @@ admin.site.register(CourseAccess)
 admin.site.register(Lesson)
 admin.site.register(Homework)
 admin.site.register(StudentsHomeworks)
-
